@@ -11,13 +11,14 @@ import java.util.Date;
 
 public class FormCompte extends JFrame{
     JLabel lnum,lcodeClient,lcat,ldatouv,lsolde,lag,letat;
-    JTextField tnum,tcat,tdatouv,tsolde,tag,tetat;
-    JComboBox codeCli;
+    JTextField tnum,tcat,tdatouv,tsolde,tetat;
+    JComboBox codeCli,tag;
     JButton bsave,bshow,bupdate,bresearch,bdelet;
     public final DefaultTableModel model;
     JTable tCompte;
     CompteCF compte = null;
-    int index = 0;
+    int index = 0,indexage = 0;
+    
     public FormCompte(){
         //pour letat
         letat = new JLabel("Etat");
@@ -83,36 +84,39 @@ public class FormCompte extends JFrame{
         tsolde.setBounds(270, 210, 100, 20);
         this.getContentPane().add(tsolde);
         //pour tag
-        tag = new JTextField();
+        tag =  new JComboBox();
+        for(Agence age: Factory.getAgence()){
+            tag.addItem(age.getNom());
+        }
         tag.setBounds(270, 250, 100, 20);
         this.getContentPane().add(tag);
+        tag.addItemListener(new ItemListener(){
+            public void itemStateChanged(ItemEvent e){
+             indexage = tag.getSelectedIndex();
+            }
+        }
+        );
         //pour bsave
      bsave = new JButton("Enregistrer");
      bsave.setBounds(50, 300, 100, 20);
      this.getContentPane().add(bsave);
      bsave.addActionListener(new ActionListener(){
-         public void actionPerformed(ActionEvent e){
-             
+        public void actionPerformed(ActionEvent e){
+             compte = new CompteCF();
              try{
-                 compte = new CompteCF();
                  compte.setNumero(tnum.getText());
                  compte.setCodeClient(Factory.getClient().get(index).getCodeClient());
                  compte.setCategorie(tcat.getText());
                  compte.setDatOuvL();
                  compte.setSolde(Float.valueOf(tsolde.getText()));
-                 compte.setAgence(tag.getText());
+                 compte.setAgence(Factory.getAgence().get(indexage).getNom());
                  Factory.insertCompte(compte);
-                 afficher();
-                effacer();
              }
              catch(Exception k){
                  JOptionPane.showConfirmDialog(null, k.getMessage());
-             
-             }
-            
-             
-            
-             
+             } 
+             afficher();
+             effacer();
          }
      }
      );
@@ -149,7 +153,7 @@ public class FormCompte extends JFrame{
             tcat.setText(compte.getCategorie());
             tdatouv.setText(String.valueOf(compte.getDatOuv()));
             tsolde.setText(String.valueOf(compte.getSolde()));
-            tag.setText(compte.getAgence());
+            tag.setSelectedItem(compte.getAgence());
          }
          }
      }
@@ -188,7 +192,7 @@ public class FormCompte extends JFrame{
         tcat.setText("");
         tdatouv.setText("");
         tsolde.setText("");
-        tag.setText("");
+        
     }
     public void afficher(){
         model.setRowCount(0);

@@ -20,6 +20,7 @@ public class Factory {
     private static EmployeCF empl = null;
     private static ClientCF client =null;
     private static CategorieCF catego= null;
+    private static Agence agence = null;
     private static CompteCF compte= null;
     private static OperationCF ope = null;
     
@@ -261,13 +262,20 @@ public class Factory {
       public static void insertCompte(CompteCF co){
            try{
               conn = getConnection();
-              prtstm = conn.prepareStatement("insert into banquekaneza.compte(numero,codeClient,categorie,date_ouverture,solde,agence) values('"+co.getNumero()+"','"+co.getCodeClient()+"','"+co.getCategorie()+"','"+co.getDatOuv()+"','"+co.getSolde()+"','"+co.getAgence()+"')");
+              prtstm = conn.prepareStatement("insert into banquekaneza.compte(numero,codeClient,categorie,solde,agence) values(?,?,?,?,?)");
+              prtstm.setString(1, co.getNumero());
+              prtstm.setString(2, co.getCodeClient());
+              prtstm.setString(3, co.getCategorie());
+              prtstm.setFloat(4, co.getSolde());
+              prtstm.setString(5, co.getAgence());
               
               prtstm.executeUpdate();
               conn.close();
               prtstm.close();
           }
-          catch(Exception l){}
+          catch(Exception l){
+            JOptionPane.showMessageDialog(null, l.getMessage());
+          }
       }
       //fonction pour afficher les categories
       public static ArrayList<CategorieCF> getCategorie(){
@@ -293,6 +301,31 @@ public class Factory {
           }
           
           return listeCat;
+      }
+      //fonction pour retourner les agences
+       public static ArrayList<Agence> getAgence(){
+          ArrayList<Agence> listeagence = new ArrayList();
+          try{
+             
+            conn = getConnection();
+            stm =conn.createStatement();
+            rs = stm.executeQuery("Select * from banquekaneza.agence");
+            while(rs.next()){
+                agence = new Agence();
+                agence.setIdagence("");
+                agence.setNom(rs.getString("nom"));
+                
+                listeagence.add(agence);
+            }
+            stm.close();
+            conn.close();
+          }
+          catch(Exception l){
+              JOptionPane.showMessageDialog(null, l.getMessage());
+              return null; 
+          }
+          
+          return listeagence;
       }
       //fonction pour afficher les comptes
       public static ArrayList<CompteCF> getCompte(){

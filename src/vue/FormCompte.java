@@ -197,7 +197,7 @@ public class FormCompte extends JFrame{
     public void afficher(){
         model.setRowCount(0);
         for(CompteCF cf: Factory.getCompte()){
-            model.addRow(new Object[]{cf.getNumero(),cf.getCodeClient(),cf.getCategorie(),cf.getDatOuv(),cf.getSolde(),cf.getAgence(),cf.getEtat()}
+            model.addRow(new Object[]{cf.getNumero(),Factory.getClientByCode(cf.getCodeClient()),cf.getCategorie(),cf.getDatOuv(),cf.getSolde(),cf.getAgence(),cf.getEtat()}
             );
             
         }

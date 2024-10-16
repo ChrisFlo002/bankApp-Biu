@@ -4,13 +4,19 @@ import javax.swing.*;
 import java.awt.*;
 import javax.swing.event.*;
 import java.awt.event.*;
+import modele.EmployeCF;
 
 
 public class FormPcp extends JFrame {
     JMenuBar bar;
     JMenu mDonnes,mFichier,mTrait,mrapp,mParam;
     JMenuItem iemp,iclient,iquitter,icat,icompte,iope,icomptes1c,icomP,iopSurCo;
-    public FormPcp(){
+    JLabel lpres;
+    public FormPcp(EmployeCF em){
+        //Message d'accueil
+       lpres = new JLabel("Bonjour "+em.getNom()+" "+em.getPrenom()+". Bienvenu :)");
+       lpres.setBounds(100,0, 300, 100);
+       this.getContentPane().add(lpres);
         bar = new JMenuBar();
         
         mDonnes = new JMenu("Données de base");
@@ -19,7 +25,7 @@ public class FormPcp extends JFrame {
         
         mTrait = new JMenu("Traitement");
         
-        mrapp = new JMenu("Rapport");
+        mrapp = new JMenu("Interroger");
         
         mParam = new JMenu("Paramétrages");
         
@@ -34,11 +40,11 @@ public class FormPcp extends JFrame {
                  }
         }
         );
-        iemp = new JMenuItem("Utilisateurs");
+        iemp = new JMenuItem("Employés");
         iemp.addActionListener(new ActionListener(){
                  public void actionPerformed(ActionEvent e){
                      FormEmp fc = new FormEmp();
-                     fc.setTitle("Gestion des utlisateurs");
+                     fc.setTitle("Gestion des employés");
                      fc.setSize(800,800);
                      fc.setVisible(true);
                      
@@ -129,12 +135,23 @@ public class FormPcp extends JFrame {
         mrapp.add(icomptes1c);
         mrapp.add(iopSurCo);
         mFichier.add(iquitter);
-        
-        bar.add(mFichier);
-        bar.add(mDonnes);
-        bar.add(mParam);
-        bar.add(mTrait);
-        bar.add(mrapp);
+        //ajouter bar selon la fonction de l'employé connecté
+         
+        if((em.getFonction().equals("Admin")) || (em.getFonction().equals("Chef d'agence"))) {
+            //JOptionPane.showMessageDialog(null, em.getNomComplet());
+            bar.add(mFichier);
+            bar.add(mDonnes);
+            bar.add(mParam);
+            bar.add(mTrait);
+            bar.add(mrapp);
+        }else if(em.getFonction().equals("Caissier")){
+            bar.add(mFichier);
+            bar.add(mTrait);
+            bar.add(mrapp);
+        }else if(em.getFonction().equals("Chef d'agence")){
+            
+        }
+       
         
         this.setJMenuBar(bar);
         

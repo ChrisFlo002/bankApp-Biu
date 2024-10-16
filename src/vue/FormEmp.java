@@ -9,12 +9,15 @@ import modele.*;
 import controlleur.*;
 
 public class FormEmp extends JFrame {
-    JLabel lc,ln,lp,lte,lad,lus,lpswd,lfonc;
+    JLabel lc,ln,lp,lte,lad,lus,lpswd,lfonc,lagence;
     JTextField tc,tn,tp,tte,tad,tus,tpswd,tfonc;
     JButton bsave,bshow,bupdate,bresearch,bdelet;
+    JComboBox tag;
     public final DefaultTableModel model;
     JTable templ;
     EmployeCF em = null;
+    int indexage = 0;
+    EmployeCF emploCon = Authentifier.emploConnected;
     public FormEmp(){
         //pour lc 
      lc = new JLabel("Code");
@@ -48,6 +51,10 @@ public class FormEmp extends JFrame {
      lfonc = new JLabel("Fonction");
      lfonc.setBounds(30, 330, 200, 20);
      this.getContentPane().add(lfonc);
+     //pour lagence
+        lagence = new JLabel("Agence");
+        lagence.setBounds(30, 370, 200, 20);
+        this.getContentPane().add(lagence);
      //pour tc
      tc = new JTextField();
      tc.setBounds(250, 50, 100, 20);
@@ -80,10 +87,25 @@ public class FormEmp extends JFrame {
      tfonc = new JTextField();
      tfonc.setBounds(250, 330, 100, 20);
      this.getContentPane().add(tfonc);
-     //pour bsave
+     //pour tag
+        tag =  new JComboBox();
+        for(Agence age: Factory.getAgence()){
+            tag.addItem(age.getNom());
+        }
+        tag.setBounds(250, 370, 100, 20);
+        this.getContentPane().add(tag);
+        tag.addItemListener(new ItemListener(){
+            public void itemStateChanged(ItemEvent e){
+             indexage = tag.getSelectedIndex();
+            }
+        }
+        );
+     //pour bsave if admin
      bsave = new JButton("Enregistrer");
-     bsave.setBounds(50, 400, 100, 20);
-     this.getContentPane().add(bsave);
+     bsave.setBounds(50, 420, 100, 20);
+     if(emploCon.getFonction().equals("Admin")){
+          this.getContentPane().add(bsave);
+     }
     bsave.addActionListener(new ActionListener(){
          public void actionPerformed(ActionEvent e){
              em = new EmployeCF();
@@ -97,7 +119,7 @@ public class FormEmp extends JFrame {
                  em.setUsername(tus.getText());
                  em.setPassword(tpswd.getText());
                  em.setFonction(tfonc.getText());
-                
+                 em.setAgence(Factory.getAgence().get(indexage).getNom());
              }
              catch(Exception k){
                  JOptionPane.showConfirmDialog(null, k.getMessage());
@@ -113,18 +135,26 @@ public class FormEmp extends JFrame {
      );
      //pour bshow
      bshow = new JButton("Afficher");
-     bshow.setBounds(170, 400, 100, 20);
+     bshow.setBounds(170, 420, 100, 20);
      this.getContentPane().add(bshow);
      bshow.addActionListener(new ActionListener(){
          public void actionPerformed(ActionEvent l){
-             afficher();
+             if(emploCon.getFonction().equals("Chef d'agence")){
+                 afficherChef();
+            }else {
+                 afficher();
+             }
+             
          }
      }
      );
      //pour bupdate
      bupdate = new JButton("Modifier");
-     bupdate.setBounds(290, 400, 100, 20);
-     this.getContentPane().add(bupdate);
+     bupdate.setBounds(290, 420, 100, 20);
+     if(emploCon.getFonction().equals("Admin")){
+        this.getContentPane().add(bupdate);
+     }
+     
      bupdate.addActionListener(new ActionListener(){
          public void actionPerformed(ActionEvent e){
              em = new EmployeCF();
@@ -161,12 +191,13 @@ public class FormEmp extends JFrame {
              tus.setText(em.getUsername());
              tpswd.setText(em.getPassword());
              tfonc.setText(em.getFonction());
+             tag.setSelectedItem(em.getAgence());
          }
      }
      );
      //pour bdelet
      bdelet = new JButton("Supprimer");
-     bdelet.setBounds(410, 400, 100, 20);
+     bdelet.setBounds(410, 420, 100, 20);
      this.getContentPane().add(bdelet);
      bdelet.addActionListener(new ActionListener(){
          public void actionPerformed(ActionEvent e){
@@ -199,7 +230,7 @@ public class FormEmp extends JFrame {
     model.addColumn("Username");
     model.addColumn("Password");
     model.addColumn("Fonction");
-    
+    model.addColumn("Agence");
      
      this.setLayout(null);
     }
@@ -214,10 +245,21 @@ public class FormEmp extends JFrame {
      tfonc.setText("");
      
     }
+    public void afficherChef(){
+        model.setRowCount(0);
+        for(EmployeCF e:Factory.getEmploAgence(emploCon.getAgence())){
+          model.addRow(new Object[]{e.getCode(),e.getNom(),e.getPrenom(),e.getTel(),e.getAdresse(),e.getUsername(),e.getPassword(),e.getFonction(),e.getAgence()}
+                  );
+        }
+        templ = new JTable(model);
+        JScrollPane c =new JScrollPane(templ);
+        c.setBounds(50,450,600,200);
+        this.getContentPane().add(c);
+    }
     public void afficher(){
         model.setRowCount(0);
         for(EmployeCF e:Factory.getEmplo()){
-          model.addRow(new Object[]{e.getCode(),e.getNom(),e.getPrenom(),e.getTel(),e.getAdresse(),e.getUsername(),e.getPassword(),e.getFonction()}
+          model.addRow(new Object[]{e.getCode(),e.getNom(),e.getPrenom(),e.getTel(),e.getAdresse(),e.getUsername(),e.getPassword(),e.getFonction(),e.getAgence()}
                   );
         }
         templ = new JTable(model);

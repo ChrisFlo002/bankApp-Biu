@@ -42,7 +42,7 @@ public class Factory {
           return null;
           }
       }
-      //fonction pour afficher tous les employés
+      //fonction pour afficher tous les employés pour la connexion
       public static ArrayList<EmployeCF> getEmplo(){
           ArrayList<EmployeCF> listeemp = new ArrayList();
           try{
@@ -59,8 +59,9 @@ public class Factory {
             empl.setUsername(rs.getString("username"));
             empl.setPassword(rs.getString("password"));
             empl.setFonction(rs.getString("fonction"));
+            empl.setAgence(rs.getString("agence"));
             
-            liste.add(empl);
+            listeemp.add(empl);
             }
             conn.close();
             stm.close();
@@ -70,9 +71,40 @@ public class Factory {
           return null; 
           }
       
-      return liste;
+      return listeemp;
       }
-       //fonction pour afficher tous les clients
+       //liste des employés selon agence
+      public static ArrayList<EmployeCF> getEmploAgence(String agence){
+          ArrayList<EmployeCF> listeemp = new ArrayList();
+          try{
+            conn = getConnection();
+            stm = conn.createStatement();
+            rs = stm.executeQuery("Select * from banquekaneza.employe where agence='"+agence+"'");
+            while(rs.next()){
+            empl = new EmployeCF();
+            empl.setCode(rs.getString("code"));
+            empl.setNom(rs.getString("nom"));
+            empl.setPrenom(rs.getString("prenom"));
+            empl.setTel(rs.getString("tel"));
+            empl.setAdresse(rs.getString("adresse"));
+            empl.setUsername(rs.getString("username"));
+            empl.setPassword(rs.getString("password"));
+            empl.setFonction(rs.getString("fonction"));
+            empl.setAgence(rs.getString("agence"));
+            
+            listeemp.add(empl);
+            }
+            conn.close();
+            stm.close();
+          }
+          catch(Exception k){
+          JOptionPane.showMessageDialog(null, k.getMessage());
+          return null; 
+          }
+      
+      return listeemp;
+      }
+      //fonction pour afficher tous les clients
       public static ArrayList<ClientCF> getClient(){
           ArrayList<ClientCF> listecli = new ArrayList();
           try{
@@ -106,7 +138,7 @@ public class Factory {
       public static void insertEmploye(EmployeCF f){
           try{
               conn = getConnection();
-              prtstm = conn.prepareStatement("insert into banquekaneza.employe(code,nom,prenom,tel,adresse,username,password,fonction) values(?,?,?,?,?,?,?,?)");
+              prtstm = conn.prepareStatement("insert into banquekaneza.employe(code,nom,prenom,tel,adresse,username,password,fonction,agence) values(?,?,?,?,?,?,?,?,?)");
               prtstm.setString(1, f.getCode());
               prtstm.setString(2, f.getNom());
               prtstm.setString(3, f.getPrenom());
@@ -115,6 +147,7 @@ public class Factory {
               prtstm.setString(6, f.getUsername());
               prtstm.setString(7, f.getPassword());
               prtstm.setString(8, f.getFonction());
+              prtstm.setString(9, f.getAgence());
               
               prtstm.executeUpdate();
               conn.close();
@@ -208,6 +241,7 @@ public class Factory {
                 empl.setUsername(rs.getString("username"));
                 empl.setPassword(rs.getString("password"));
                 empl.setFonction(rs.getString("fonction"));
+                empl.setAgence(rs.getString("agence"));
                 
             }
             conn.close();

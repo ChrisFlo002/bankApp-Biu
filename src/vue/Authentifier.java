@@ -12,6 +12,7 @@ public class Authentifier extends JFrame{
     JLabel lnom,lpass;
     JTextField tnom,tpass;
     JButton bcon;
+    public static EmployeCF emploConnected = null;//employe à utiliser ailleurs
     public Authentifier(){
         //pour lnom
         lnom = new JLabel("Username");
@@ -38,7 +39,10 @@ public class Authentifier extends JFrame{
              boolean trouve=false; 
              for(EmployeCF em: Factory.getEmplo()){
                  if((em.getUsername().equals(tnom.getText()) ) && (em.getPassword().equals(tpass.getText()))) {
-                     FormPcp fp = new FormPcp();
+                    emploConnected = new EmployeCF();
+                    emploConnected = em;
+                    //JOptionPane.showMessageDialog(null, emploConnected.getNomComplet());
+                    FormPcp fp = new FormPcp(em);
                     fp.setTitle("Banque KANEZA");
                     fp.setSize(600, 600);
                     fp.setVisible(true);

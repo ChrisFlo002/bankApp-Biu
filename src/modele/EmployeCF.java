@@ -11,6 +11,7 @@ public class EmployeCF {
     private String username;
     private String password;
     private String fonction;
+    private String agence;
 
     public String getCode() {
         return code;
@@ -74,6 +75,13 @@ public class EmployeCF {
 
     public void setFonction(String fonction) {
         this.fonction = fonction;
+    }
+     public String getAgence() {
+        return agence;
+    }
+
+    public void setAgence(String agen) {
+        this.agence = agen;
     }
     public String getNomComplet(){
         return code+" "+nom+" "+prenom+" "+fonction;

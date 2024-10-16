@@ -19,7 +19,7 @@ public class FormPcp extends JFrame {
         
         mTrait = new JMenu("Traitement");
         
-        mrapp = new JMenu("Rapport");
+        mrapp = new JMenu("Interroger");
         
         mParam = new JMenu("Paramétrages");
         

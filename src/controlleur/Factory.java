@@ -59,8 +59,9 @@ public class Factory {
             empl.setUsername(rs.getString("username"));
             empl.setPassword(rs.getString("password"));
             empl.setFonction(rs.getString("fonction"));
+            empl.setAgence(rs.getString("agence"));
             
-            liste.add(empl);
+            listeemp.add(empl);
             }
             conn.close();
             stm.close();
@@ -70,7 +71,7 @@ public class Factory {
           return null; 
           }
       
-      return liste;
+      return listeemp;
       }
        //fonction pour afficher tous les clients
       public static ArrayList<ClientCF> getClient(){
@@ -106,7 +107,7 @@ public class Factory {
       public static void insertEmploye(EmployeCF f){
           try{
               conn = getConnection();
-              prtstm = conn.prepareStatement("insert into banquekaneza.employe(code,nom,prenom,tel,adresse,username,password,fonction) values(?,?,?,?,?,?,?,?)");
+              prtstm = conn.prepareStatement("insert into banquekaneza.employe(code,nom,prenom,tel,adresse,username,password,fonction,agence) values(?,?,?,?,?,?,?,?,?)");
               prtstm.setString(1, f.getCode());
               prtstm.setString(2, f.getNom());
               prtstm.setString(3, f.getPrenom());
@@ -115,6 +116,7 @@ public class Factory {
               prtstm.setString(6, f.getUsername());
               prtstm.setString(7, f.getPassword());
               prtstm.setString(8, f.getFonction());
+              prtstm.setString(9, f.getAgence());
               
               prtstm.executeUpdate();
               conn.close();
@@ -208,6 +210,7 @@ public class Factory {
                 empl.setUsername(rs.getString("username"));
                 empl.setPassword(rs.getString("password"));
                 empl.setFonction(rs.getString("fonction"));
+                empl.setAgence(rs.getString("agence"));
                 
             }
             conn.close();

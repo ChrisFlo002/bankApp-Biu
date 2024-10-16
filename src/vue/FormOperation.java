@@ -228,7 +228,7 @@ public class FormOperation extends JFrame{
     public void afficher(){
         model.setRowCount(0);
         for(OperationCF op: Factory.getOPeration()){
-            model.addRow(new Object[]{op.getCodeOp(),op.getCodeClient(),op.getCode(),op.getIdcat(),op.getNumero(),op.getDateop(),op.getMontant()}
+            model.addRow(new Object[]{op.getCodeOp(),Factory.getClientByCode(op.getCodeClient()).getNomComplet(),Factory.getEmplByCode(op.getCode()).getNomComplet(),Factory.getCategById(op.getIdcat()).getLibelle(),op.getNumero(),op.getDateop(),op.getMontant()}
             );
         }
         toperation = new JTable(model);
